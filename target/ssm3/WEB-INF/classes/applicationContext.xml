@@ -33,9 +33,10 @@
 
         <!--配置加载映射文件 UserMapper.xml-->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <bean id = "user" class="com.zr.bean.User">
 
     </bean>
-
     <!-- 自动生成dao,mapper-->
     <!-- 4.配置扫描Dao接口包，动态实现Dao接口，注入到spring容器中 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

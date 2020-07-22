@@ -11,10 +11,6 @@
     <title>$Title$</title>
 </head>
 <body>
-<form action="login.do" method="post" autocomplete="on">
-    userName:<input type="text" name="username" /><br />
-    password: <input type="password" name="password" autocomplete="off" /><br />
-    <input type="submit" value="登录"/>
-</form>
+    <jsp:forward page="/login.jsp"></jsp:forward>
 </body>
 </html>
