@@ -1,12 +1,15 @@
 package com.zr.controller;
 
+import com.zr.bean.PageInfo;
 import com.zr.bean.User;
 import com.zr.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -18,12 +21,11 @@ public class UserController {
     private IUserService userService;
 // 处理登录请求
     @RequestMapping("login.do")
-    public ModelAndView login(User user){
-        String username = user.getUsername();
-        String password = user.getPassword();
-        boolean flag = userService.login(username, password);
+    public ModelAndView login(User user,HttpSession session){
+        boolean flag = userService.login(user.getUsername(), user.getPassword());
         ModelAndView modelAndView = new ModelAndView();
-        if(flag==true){
+        if(flag){
+            session.setAttribute("user",user);
             modelAndView.setViewName("main");
         }else {
             modelAndView.setViewName("../failer");
@@ -33,13 +35,24 @@ public class UserController {
     }
 //  查找所有用户请求
     @RequestMapping("findAll.do")
-    public ModelAndView findAll(){
-        List<User> users = userService.findAll();
+    public ModelAndView findAll(@RequestParam(defaultValue = "1") int currentPage, String username,
+             @RequestParam(defaultValue = "0") int type,
+             HttpSession session){
+        if(type==1){
+            session.setAttribute("searchname",username);
+        }else if(type==0) {
+            username = (String) session.getAttribute("searchname");
+        }else if(type==2){
+            session.removeAttribute("searchname");
+        }
+
+        PageInfo<User> pageInfo = userService.findAll(currentPage,username);
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user-list");
-        mv.addObject("users",users);
+        mv.addObject("pageInfo",pageInfo);
         return mv;
     }
+
 // 删除用户请求
     @RequestMapping("deleteByID.do")
     public String delete(int id){
