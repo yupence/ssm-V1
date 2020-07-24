@@ -1,7 +1,9 @@
 package com.zr.controller;
 
 import com.zr.bean.PageInfo;
+import com.zr.bean.Role;
 import com.zr.bean.User;
+import com.zr.service.IRoleService;
 import com.zr.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -19,19 +22,23 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IRoleService roleServive;
 // 处理登录请求
     @RequestMapping("login.do")
     public ModelAndView login(User user,HttpSession session){
-        boolean flag = userService.login(user.getUsername(), user.getPassword());
+        int id = userService.login(user.getUsername(), user.getPassword());
         ModelAndView modelAndView = new ModelAndView();
-        if(flag){
+        if(id !=-1){
+            List<Integer> roleIds = roleServive.findRoleByUserId(id);
+            session.setAttribute("roleIds",roleIds);
             session.setAttribute("user",user);
             modelAndView.setViewName("main");
         }else {
             modelAndView.setViewName("../failer");
         }
         return modelAndView;
-
     }
 //  查找所有用户请求
     @RequestMapping("findAll.do")
@@ -78,6 +85,33 @@ public class UserController {
     @RequestMapping("update.do")
     public String update(User user){
         userService.update(user);
+        return "redirect:findAll.do";
+
+    }
+
+    @RequestMapping("logout.do")
+    public String logout(HttpSession session){
+        session.removeAttribute("user");
+        return "../login";
+    }
+    @RequestMapping("toAddRole.do")
+    public ModelAndView toAddRole(int id){
+        List<Role> roleList = roleServive.findNotRoleByUserId(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("roles",roleList);
+        modelAndView.setViewName("user-role-add");
+        modelAndView.addObject("id",id);
+        return modelAndView;
+    }
+
+    @RequestMapping("addRole.do")
+    public String addRole(String roleIds,String userId){
+        String[] strs = roleIds.split(",");
+        List<Integer> ids = new ArrayList<>();
+        for(String s:strs){
+            ids.add(Integer.parseInt(s));
+        }
+        roleServive.addRole(ids,Integer.parseInt(userId));
         return "redirect:findAll.do";
 
     }

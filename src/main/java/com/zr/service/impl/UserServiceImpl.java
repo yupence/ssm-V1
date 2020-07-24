@@ -16,13 +16,12 @@ public class UserServiceImpl implements IUserService {
     private IUserDao userDao;
 
     @Override
-    public boolean login(String username, String password) {
+    public int login(String username, String password) {
         User user = userDao.findUserByUserName(username);
         if(user!=null&&user.getPassword().equals(password)){
-            return true;
+            return user.getId();
         }
-        return false;
-
+        return -1;
     }
 
     @Override
