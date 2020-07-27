@@ -214,8 +214,9 @@
 
 		</div>
 
-		<script src="../WEB-INF/plugins/jQuery/jquery-2.2.3.min.js"></script>
-		<script src="../WEB-INF/plugins/jQueryUI/jquery-ui.min.js"></script>
+
+		<script src="../jQuery/jquery-2.2.3.min.js"></script>
+		<script src="../plugins/jQueryUI/jquery-ui.min.js"></script>
 		<script>
 			$.widget.bridge('uibutton', $.ui.button);
 		</script>
@@ -282,63 +283,47 @@
 				}
 			}
 
-			$(document)
-					.ready(
-							function() {
-
-								// 激活导航位置
-								setSidebarActive("admin-datalist");
-
-								// 列表按钮 
-								$("#dataList td input[type='checkbox']")
-										.iCheck(
-												{
-													checkboxClass : 'icheckbox_square-blue',
-													increaseArea : '20%'
-												});
-								// 全选操作 
-								$("#selall")
-										.click(
-												function() {
-													var clicks = $(this).is(
-															':checked');
-													if (!clicks) {
-														$(
-																"#dataList td input[type='checkbox']")
-																.iCheck(
-																		"uncheck");
-													} else {
-														$(
-																"#dataList td input[type='checkbox']")
-																.iCheck("check");
-													}
-													$(this).data("clicks",
-															!clicks);
-												});
-							});
-
+			$(document).ready(function() {
+				// 激活导航位置
+				setSidebarActive("admin-datalist");
+				// 列表按钮
+				$("#dataList td input[type='checkbox']").iCheck(
+				{
+					checkboxClass : 'icheckbox_square-blue',
+					increaseArea : '20%'
+				});
+				// 全选操作
+				$("#selall").click(function() {
+					var clicks = $(this).is(
+							':checked');
+					if (!clicks) {
+						$("#dataList td input[type='checkbox']").iCheck("uncheck");
+					} else {
+						$("#dataList td input[type='checkbox']").iCheck("check");
+					}
+					$(this).data("clicks", !clicks);
+				});
+			});
 			function deleteAll() {
 				var checkedNum=$("input[name='ids']:checked").length;
-				alert(checkedNum);
 				if(checkedNum==0){
-					alert("请至少选择一个进行删除！！！");
+					alert("请至少选择1个进行删除！");
 					return;
 				}
-				if(confirm("确认要删除这些用户吗？")){
+				if(confirm("确认要删除这下用户吗？")){
 					var userList=new Array();
 					$("input[name='ids']:checked").each(
 							function () {
 								userList.push($(this).val())
 							}
 					);
-					alert(userList);
 					$.ajax({
 						type:"post",
-						url: "${pageContext.request.contextPath}/user/deleteAll.do",
+						url:"/user/deleteAll.do",
 						data:{userList:userList.toString()},
 						success:function () {
 							alert("删除成功");
-							location.reload();
+							location.href="/user/findAll.do";
 
 						},
 						error:function () {
@@ -347,13 +332,33 @@
 					});
 				}
 
-
-
-
-
+				/*var checkedNum=$("input[name='ids']:checked").length;
+				if (checkedNum == 0) {
+					alert("请至少选择一个进行删除！！！");
+					return;
+				}
+				if (confirm("确认要删除这些用户吗？")) {
+					var userList = new Array();
+					$("input:[name='ids']:checked").each(
+							function () {
+								userList.push($(this).val())
+							}
+					);
+					alert(userList);
+					$.ajax({
+						type: "post",
+						url: "/user/deleteAll.do",
+						data: {userList: userList.toString()},
+						success: function () {
+							alert("删除成功");
+							location.href = "/user/findAll.do";
+						},
+						error: function () {
+							alert("删除失败");
+						}
+					});
+				}*/
 			}
-
-
 		</script>
 </body>
 

@@ -66,4 +66,9 @@ public class UserServiceImpl implements IUserService {
         userDao.update(user);
     }
 
+    @Override
+    public void deleteAll(List<Integer> ids) {
+
+    }
+
 }

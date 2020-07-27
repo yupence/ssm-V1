@@ -108,7 +108,7 @@
 						<div class="col-md-2 title">用户名称</div>
 						<div class="col-md-4 data">
 							<input type="text" class="form-control" name="username"
-								placeholder="用户名称" value="">
+								placeholder="用户名称" value=" ">
 						</div>
 						<div class="col-md-2 title">密码</div>
 						<div class="col-md-4 data">

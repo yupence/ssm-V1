@@ -18,5 +18,6 @@ public interface IUserDao {
 
     void update(User user);
     int getTotalCount(@Param("username") String username);
+    void deleteAll(@Param("ids") List<Integer> ids);
 
 }

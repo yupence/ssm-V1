@@ -7,8 +7,10 @@ import com.zr.service.IRoleService;
 import com.zr.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -115,4 +117,18 @@ public class UserController {
         return "redirect:findAll.do";
 
     }
+
+    @PostMapping("deleteAll.do")
+    @ResponseBody
+    public String deleteAll(String userList){
+        String[] strings = userList.split(",");
+        List<Integer> ids = new ArrayList<>();
+        for(String s:strings){
+            ids.add(Integer.parseInt(s));
+        }
+        userService.deleteAll(ids);
+        return "";
+    }
+
+
 }

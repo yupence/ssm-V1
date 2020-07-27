@@ -282,8 +282,7 @@
 							roleList.push($(this).val())
 						}
 				);
-				var userId=$("input[name='userId']").val();
-				alert(userId);
+				var userId=$("input[name='userId']").val()
 				location.href="/user/addRole.do?roleIds="+roleList.toString()+"&userId="+userId;
 			}
 
